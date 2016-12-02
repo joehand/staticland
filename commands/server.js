@@ -1,5 +1,4 @@
 var addhttps = require('../lib/add-https')
-var config = require('../lib/config')()
 var error = require('../lib/error')
 
 /**
@@ -8,22 +7,25 @@ var error = require('../lib/error')
 * @example
 * staticland server api.static.land
 */
-module.exports = {
-  name: 'server',
-  command: function server (args) {
-    var server = args._[0]
+module.exports = function (client) {
+  var config = client.config
+  return {
+    name: 'server',
+    command: function server (args) {
+      var server = args._[0]
 
-    if (!server) {
-      return error('server argument required')
+      if (!server) {
+        return error('server argument required')
+      }
+
+      server = addhttps(server)
+      var login = config.get(server)
+
+      if (!login) {
+        return error('login info for server ', server, 'not found')
+      }
+
+      config.set('currentLogin', login)
     }
-
-    server = addhttps(server)
-    var login = config.get(server)
-
-    if (!login) {
-      return error('login info for server ', server, 'not found')
-    }
-
-    config.set('currentLogin', login)
   }
 }

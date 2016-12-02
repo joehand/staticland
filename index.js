@@ -14,33 +14,6 @@ module.exports = function staticlandAPIClient (config) {
     tarstream.pipe(stream)
   }
 
-  client.register = function (opts, callback) {
-    if (!opts.password) return callback(new Error('password property is required'))
-    if (!opts.email) return callback(new Error('email property is required'))
-
-    return request({
-      method: 'POST',
-      url: client.server + '/auth',
-      json: {
-        email: opts.email,
-        password: opts.password
-      }
-    }, callback)
-  }
-
-  client.login = function (opts, callback) {
-    if (!opts.email) return callback(new Error('email property is required'))
-
-    return request({
-      method: 'POST',
-      url: client.server + '/auth/verify',
-      json: {
-        email: opts.email,
-        password: opts.password
-      }
-    }, callback)
-  }
-
   client.owner = function (opts, callback) {
     if (!opts.domain) return callback(new Error('domain option is required'))
     if (!opts.email) return callback(new Error('domain email is required'))
@@ -54,24 +27,6 @@ module.exports = function staticlandAPIClient (config) {
         token: opts.token,
         owner: opts.email,
         domain: opts.domain
-      }
-    }, callback)
-  }
-
-  client.password = function (opts, callback) {
-    if (!opts.email) return callback(new Error('domain email is required'))
-    if (!opts.token) return callback(new Error('domain email is required'))
-    if (!opts.currentPassword) return callback(new Error('domain password is required'))
-    if (!opts.newPassword) return callback(new Error('domain password is required'))
-
-    return request({
-      method: 'POST',
-      url: client.server + '/auth/password',
-      json: {
-        email: opts.email,
-        token: opts.token,
-        currentPassword: opts.currentPassword,
-        newPassword: opts.newPassword
       }
     }, callback)
   }
